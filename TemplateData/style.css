@@ -1,4 +1,35 @@
-body { padding: 0; margin: 0 }
+body { 
+    padding: 0; 
+    margin: 0;
+    background-color: #1E1F22;
+    font-family: 'Roboto', sans-serif;
+    color: #D9DCDF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-weight: bold;
+}
+.logo-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.logo-container .logo {
+    width: 120px; /* Adjust as needed */
+    height: fit-content; /* Adjust as needed */
+}
+
+.logo-container .title {
+    margin-left: 10px;
+    color: #fff; /* Adjust color as needed */
+    font-size: 24px; /* Adjust font size as needed */
+}
 #unity-container { position: absolute }
 #unity-container.unity-desktop { left: 50%; top: 50%; transform: translate(-50%, -50%) }
 #unity-container.unity-mobile { width: 100%; height: 100% }
