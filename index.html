@@ -72,13 +72,17 @@
             unityInstance.SetFullscreen(0);
 
             if (screen.orientation && typeof screen.orientation.unlock === 'function') {
-                screen.orientation.unlock().catch(function (error) {
-                    console.log("Error unlocking the orientation: ", error);
-                });
+                let unlockPromise = screen.orientation.unlock();
+                if (unlockPromise && typeof unlockPromise.catch === 'function') {
+                    unlockPromise.catch(function (error) {
+                        console.log("Error unlocking the orientation: ", error);
+                    });
+                }
             } else {
                 console.log("Screen orientation unlocking is not supported or not necessary.");
             }
         }
+
 
         function toggleFullscreen() {
             if (!document.fullscreenElement &&    // alternative standard method
