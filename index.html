@@ -37,6 +37,7 @@
 
         function requestFullscreen() {
             var elem = document.getElementById('unity-container');
+            unityInstance2.SetFullscreen(1);
             if (elem.requestFullscreen) {
                 elem.requestFullscreen();
             } else if (elem.mozRequestFullScreen) { // Firefox
