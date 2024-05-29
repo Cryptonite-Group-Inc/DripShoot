@@ -6,6 +6,21 @@
     <title>Unity WebGL Player | Drip Shoot Shot</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
+    <style>
+        #unity-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        #unity-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
     <div id="unity-container" class="unity-desktop">
@@ -75,6 +90,13 @@
             }
         }
 
+        function resizeCanvas() {
+            canvas.style.width = window.innerWidth + 'px';
+            canvas.style.height = window.innerHeight + 'px';
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
         function unityShowBanner(msg, type) {
             function updateBannerVisibility() {
                 warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
@@ -135,6 +157,7 @@
                 fullscreenButton.onclick = () => {
                     unityInstance.SetFullscreen(1);
                     toggleFullscreen();
+                    resizeCanvas();
                 };
                 var encryptedData = getURLParameter('data');
                 unityInstance.SendMessage('Data', 'ReceiveEncryptedData', encryptedData);
