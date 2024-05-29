@@ -57,7 +57,9 @@
         }
 
         function exitFullscreen() {
-         /*   if (document.exitFullscreen) {
+            // Old fullscreen exit methods commented out for reference
+            /*
+            if (document.exitFullscreen) {
                 document.exitFullscreen();
             } else if (document.mozCancelFullScreen) { // Firefox
                 document.mozCancelFullScreen();
@@ -69,10 +71,12 @@
             */
             unityInstance.SetFullscreen(0);
 
-            if (screen.orientation && screen.orientation.unlock) {
+            if (screen.orientation && typeof screen.orientation.unlock === 'function') {
                 screen.orientation.unlock().catch(function (error) {
                     console.log("Error unlocking the orientation: ", error);
                 });
+            } else {
+                console.log("Screen orientation unlocking is not supported or not necessary.");
             }
         }
 
