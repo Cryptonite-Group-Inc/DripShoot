@@ -20,7 +20,6 @@
         <div id="unity-footer">
             <div id="unity-webgl-logo"></div>
             <button id="unity-fullscreen-button">Enter Fullscreen</button>
-            <button id="unity-exit-fullscreen-button">Exit Fullscreen</button>
             <div id="unity-build-title">Drip Shoot Shot</div>
         </div>
     </div>
@@ -30,7 +29,6 @@
         var loadingBar = document.querySelector("#unity-loading-bar");
         var progressBarFull = document.querySelector("#unity-progress-bar-full");
         var fullscreenButton = document.querySelector("#unity-fullscreen-button");
-        var exitFullscreenButton = document.querySelector("#unity-exit-fullscreen-button");
         var warningBanner = document.querySelector("#unity-warning");
 
         var unityInstance; // Declare unityInstance globally
@@ -40,7 +38,7 @@
         }
 
         function requestFullscreen() {
-           var elem = document.getElementById('unity-container');
+        /*    var elem = document.getElementById('unity-container');
             if (elem.requestFullscreen) {
                 elem.requestFullscreen();
             } else if (elem.mozRequestFullScreen) { // Firefox
