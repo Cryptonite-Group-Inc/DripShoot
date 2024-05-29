@@ -40,7 +40,7 @@
         }
 
         function requestFullscreen() {
-            var elem = document.getElementById('unity-container');
+           var elem = document.getElementById('unity-container');
             if (elem.requestFullscreen) {
                 elem.requestFullscreen();
             } else if (elem.mozRequestFullScreen) { // Firefox
@@ -49,7 +49,8 @@
                 elem.webkitRequestFullscreen();
             } else if (elem.msRequestFullscreen) { // IE/Edge
                 elem.msRequestFullscreen();
-            }
+            }*/
+            unityInstance.SetFullscreen(1);
             if (screen.orientation && screen.orientation.lock) {
                 screen.orientation.lock('landscape').catch(function (error) {
                     console.log("Error locking the orientation: ", error);
@@ -58,7 +59,7 @@
         }
 
         function exitFullscreen() {
-            if (document.exitFullscreen) {
+         /*   if (document.exitFullscreen) {
                 document.exitFullscreen();
             } else if (document.mozCancelFullScreen) { // Firefox
                 document.mozCancelFullScreen();
@@ -67,6 +68,9 @@
             } else if (document.msExitFullscreen) { // IE/Edge
                 document.msExitFullscreen();
             }
+            */
+            unityInstance.SetFullscreen(0);
+
             if (screen.orientation && screen.orientation.unlock) {
                 screen.orientation.unlock().catch(function (error) {
                     console.log("Error unlocking the orientation: ", error);
@@ -142,10 +146,6 @@
                 fullscreenButton.onclick = () => {
                     unityInstance.SetFullscreen(1);
                     requestFullscreen();
-                };
-                exitFullscreenButton.onclick = () => {
-                    unityInstance.SetFullscreen(0);
-                    exitFullscreen();
                 };
                 var encryptedData = getURLParameter('data');
                 unityInstance.SendMessage('Data', 'ReceiveEncryptedData', encryptedData);
