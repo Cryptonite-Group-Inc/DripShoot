@@ -85,17 +85,24 @@
             if (!document.fullscreenElement &&    // alternative standard method
                 !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {  // current working methods
                 requestFullscreen();
+                resizeCanvas(true);
             } else {
                 exitFullscreen();
+                resizeCanvas(false);
             }
         }
 
-        function resizeCanvas() {
-            canvas.style.width = window.innerWidth + 'px';
-            canvas.style.height = window.innerHeight + 'px';
+        function resizeCanvas(isFullscreen) {
+            if (isFullscreen) {
+                canvas.style.width = window.innerWidth + 'px';
+                canvas.style.height = window.innerHeight + 'px';
+            } else {
+                canvas.style.width = '960px';
+                canvas.style.height = '600px';
+            }
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
         }
-
-        window.addEventListener('resize', resizeCanvas);
 
         function unityShowBanner(msg, type) {
             function updateBannerVisibility() {
@@ -157,7 +164,6 @@
                 fullscreenButton.onclick = () => {
                     unityInstance.SetFullscreen(1);
                     toggleFullscreen();
-                    resizeCanvas();
                 };
                 var encryptedData = getURLParameter('data');
                 unityInstance.SendMessage('Data', 'ReceiveEncryptedData', encryptedData);
