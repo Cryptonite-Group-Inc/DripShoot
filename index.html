@@ -19,7 +19,7 @@
         <div id="unity-warning"> </div>
         <div id="unity-footer">
             <div id="unity-webgl-logo"></div>
-            <div id="unity-fullscreen-button"></div>
+            <button id="unity-fullscreen-button">Enter Fullscreen</button>
             <div id="unity-build-title">Drip Shoot Shot</div>
         </div>
     </div>
@@ -38,16 +38,6 @@
         }
 
         function requestFullscreen() {
-        /*    var elem = document.getElementById('unity-container');
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.mozRequestFullScreen) { // Firefox
-                elem.mozRequestFullScreen();
-            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, Opera
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { // IE/Edge
-                elem.msRequestFullscreen();
-            }*/
             unityInstance.SetFullscreen(1);
             if (screen.orientation && screen.orientation.lock) {
                 screen.orientation.lock('landscape').catch(function (error) {
@@ -57,18 +47,6 @@
         }
 
         function exitFullscreen() {
-            // Old fullscreen exit methods commented out for reference
-            /*
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.mozCancelFullScreen) { // Firefox
-                document.mozCancelFullScreen();
-            } else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) { // IE/Edge
-                document.msExitFullscreen();
-            }
-            */
             unityInstance.SetFullscreen(0);
 
             if (screen.orientation && typeof screen.orientation.unlock === 'function') {
@@ -82,7 +60,6 @@
                 console.log("Screen orientation unlocking is not supported or not necessary.");
             }
         }
-
 
         function toggleFullscreen() {
             if (!document.fullscreenElement &&    // alternative standard method
@@ -150,7 +127,6 @@
                 unityInstance = instance; // Assign the instance to the global variable
                 loadingBar.style.display = "none";
                 fullscreenButton.onclick = () => {
-                    unityInstance.SetFullscreen(1);
                     requestFullscreen();
                 };
                 var encryptedData = getURLParameter('data');
