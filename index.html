@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | Drip Shoot Shot</title>
+    <script src="ios_detection.js"></script>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
 </head>
@@ -44,6 +45,7 @@
                     console.log("Error locking the orientation: ", error);
                 });
             }
+            unityInstance.SendMessage('Screen', 'FullScreen', true); // Notify Unity of exiting fullscreen
         }
 
         function exitFullscreen() {
@@ -59,7 +61,8 @@
             } else {
                 console.log("Screen orientation unlocking is not supported or not necessary.");
             }
-        }
+            unityInstance.SendMessage('Screen', 'FullScreen', false); // Notify Unity of exiting fullscreen
+ }
 
         function toggleFullscreen() {
             if (!document.fullscreenElement &&    // alternative standard method
@@ -131,6 +134,7 @@
                 };
                 var encryptedData = getURLParameter('data');
                 unityInstance.SendMessage('Data', 'ReceiveEncryptedData', encryptedData);
+                unityInstance.SendMessage('Screen', 'FullScreen', false); // Notify Unity of exiting fullscreen
             }).catch((message) => {
                 alert(message);
             });
