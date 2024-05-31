@@ -144,7 +144,8 @@
                 };
                 var encryptedData = getURLParameter('data');
                 unityInstance.SendMessage('Data', 'ReceiveEncryptedData', encryptedData);
-                unityInstance.SendMessage('Screen', 'FullScreen', false); // Notify Unity of exiting fullscreen
+                if (window.isIOSDevice)
+                unityInstance.SendMessage('Screen', 'FullScreen', "0"); // Notify Unity of exiting fullscreen
             }).catch((message) => {
                 alert(message);
             });
