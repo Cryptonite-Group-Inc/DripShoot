@@ -47,36 +47,46 @@
         }
 
         function requestFullscreen() {
-            unityInstance.SetFullscreen(1);
+            var element = document.documentElement;
+            var requestMethod = element.requestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen || element.msRequestFullscreen;
+            if (requestMethod) {
+                requestMethod.call(element).then(() => {
+                    lockOrientation();
+                }).catch((err) => {
+                    console.error(err);
+                });
+            }
+        }
+
+        function exitFullscreen() {
+            var exitMethod = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen || document.msExitFullscreen;
+            if (exitMethod) {
+                exitMethod.call(document).then(() => {
+                    unlockOrientation();
+                }).catch((err) => {
+                    console.error(err);
+                });
+            }
+        }
+
+        function lockOrientation() {
             if (screen.orientation && screen.orientation.lock) {
                 screen.orientation.lock('landscape').catch(function (error) {
                     console.log("Error locking the orientation: ", error);
                 });
             }
-            if (window.isIOSDevice)
-            unityInstance.SendMessage('Screen', 'FullScreen', "1"); // Notify Unity of exiting fullscreen
         }
 
-        function exitFullscreen() {
-            unityInstance.SetFullscreen(0);
-
-            if (screen.orientation && typeof screen.orientation.unlock === 'function') {
-                let unlockPromise = screen.orientation.unlock();
-                if (unlockPromise && typeof unlockPromise.catch === 'function') {
-                    unlockPromise.catch(function (error) {
-                        console.log("Error unlocking the orientation: ", error);
-                    });
-                }
-            } else {
-                console.log("Screen orientation unlocking is not supported or not necessary.");
+        function unlockOrientation() {
+            if (screen.orientation && screen.orientation.unlock) {
+                screen.orientation.unlock().catch(function (error) {
+                    console.log("Error unlocking the orientation: ", error);
+                });
             }
-            if (window.isIOSDevice)
-            unityInstance.SendMessage('Screen', 'FullScreen', "0"); // Notify Unity of exiting fullscreen
- }
+        }
 
         function toggleFullscreen() {
-            if (!document.fullscreenElement &&    // alternative standard method
-                !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {  // current working methods
+            if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
                 requestFullscreen();
             } else {
                 exitFullscreen();
@@ -140,12 +150,12 @@
                 unityInstance = instance; // Assign the instance to the global variable
                 loadingBar.style.display = "none";
                 fullscreenButton.onclick = () => {
-                    requestFullscreen();
+                    toggleFullscreen();
                 };
                 var encryptedData = getURLParameter('data');
                 unityInstance.SendMessage('Data', 'ReceiveEncryptedData', encryptedData);
                 if (window.isIOSDevice)
-                unityInstance.SendMessage('Screen', 'FullScreen', "0"); // Notify Unity of exiting fullscreen
+                    unityInstance.SendMessage('Screen', 'FullScreen', "0"); // Notify Unity of exiting fullscreen
             }).catch((message) => {
                 alert(message);
             });
