@@ -78,10 +78,15 @@
         }
 
         function unlockOrientation() {
-            if (screen.orientation && screen.orientation.unlock) {
-                screen.orientation.unlock().catch(function (error) {
-                    console.log("Error unlocking the orientation: ", error);
-                });
+            if (screen.orientation && typeof screen.orientation.unlock === 'function') {
+                let unlockPromise = screen.orientation.unlock();
+                if (unlockPromise && typeof unlockPromise.catch === 'function') {
+                    unlockPromise.catch(function (error) {
+                        console.log("Error unlocking the orientation: ", error);
+                    });
+                }
+            } else {
+                console.log("Screen orientation unlocking is not supported or not necessary.");
             }
         }
 
