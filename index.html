@@ -68,6 +68,7 @@
                     });
                 }
             }
+            unityInstance.SendMessage('Screen', 'FullScreen', "1"); // Notify Unity of exiting fullscreen
         }
 
         function exitFullscreen() {
@@ -91,6 +92,7 @@
                     });
                 }
             }
+            unityInstance.SendMessage('Screen', 'FullScreen', "0"); // Notify Unity of exiting fullscreen
         }
 
         function lockOrientation() {
@@ -184,7 +186,7 @@
                 var encryptedData = getURLParameter('data');
                 unityInstance.SendMessage('Data', 'ReceiveEncryptedData', encryptedData);
              //   if (window.isIOSDevice)
-                    unityInstanceunityInstance.SendMessage('Screen', 'FullScreen', "0"); // Notify Unity of exiting fullscreen
+                    unityInstance.SendMessage('Screen', 'FullScreen', "0"); // Notify Unity of exiting fullscreen
             }).catch((message) => {
                 alert(message);
             });
