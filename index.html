@@ -33,6 +33,16 @@
 
         var unityInstance; // Declare unityInstance globally
 
+        function resizeCanvas() {
+            if (container.classList.contains("unity-mobile")) {
+                canvas.style.width = window.innerWidth + 'px';
+                canvas.style.height = window.innerHeight + 'px';
+            } else {
+                canvas.style.width = "960px";
+                canvas.style.height = "600px";
+            }
+        }
+
         function getURLParameter(name) {
             return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
         }
