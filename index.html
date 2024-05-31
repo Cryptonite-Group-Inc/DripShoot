@@ -50,11 +50,12 @@
             if (window.isIOSDevice) {
                 // Handle fullscreen for iOS manually
                 canvas.style.position = "fixed";
-                canvas.style.top = 0;
-                canvas.style.left = 0;
-                canvas.style.width = "100%";
-                canvas.style.height = "100%";
+                canvas.style.top = "0";
+                canvas.style.left = "0";
+                canvas.style.width = "100vw";
+                canvas.style.height = "100vh";
                 canvas.style.zIndex = 9999;
+                document.body.style.overflow = 'hidden';
                 lockOrientation();
             } else {
                 var element = document.documentElement;
@@ -78,6 +79,7 @@
                 canvas.style.width = "960px";
                 canvas.style.height = "600px";
                 canvas.style.zIndex = "";
+                document.body.style.overflow = '';
                 unlockOrientation();
             } else {
                 var exitMethod = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen || document.msExitFullscreen;
@@ -181,8 +183,8 @@
                 };
                 var encryptedData = getURLParameter('data');
                 unityInstance.SendMessage('Data', 'ReceiveEncryptedData', encryptedData);
-                if (window.isIOSDevice)
-                    unityInstance.SendMessage('Screen', 'FullScreen', "0"); // Notify Unity of exiting fullscreen
+             //   if (window.isIOSDevice)
+                    unityInstanceunityInstance.SendMessage('Screen', 'FullScreen', "0"); // Notify Unity of exiting fullscreen
             }).catch((message) => {
                 alert(message);
             });
