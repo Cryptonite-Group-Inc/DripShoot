@@ -4,25 +4,6 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | Drip Shoot Shot</title>
-    <script type="text/javascript">
-        function isIOS() {
-            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            return /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-        }
-
-        // Set a global variable to indicate if the user is on iOS
-        window.isIOSDevice = isIOS();
-
-        // Adjust the canvas size
-        function resizeCanvas() {
-            var canvas = document.querySelector("#unity-canvas");
-            canvas.style.width = window.innerWidth + 'px';
-            canvas.style.height = window.innerHeight + 'px';
-        }
-
-        // Add event listener for resizing
-        window.addEventListener('resize', resizeCanvas);
-    </script>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
 </head>
@@ -63,8 +44,6 @@
                     console.log("Error locking the orientation: ", error);
                 });
             }
-            if (window.isIOSDevice)
-                unityInstance.SendMessage('Screen', 'FullScreen', "1"); // Notify Unity of entering fullscreen
         }
 
         function exitFullscreen() {
@@ -79,8 +58,6 @@
             } else {
                 console.log("Screen orientation unlocking is not supported or not necessary.");
             }
-            if (window.isIOSDevice)
-                unityInstance.SendMessage('Screen', 'FullScreen', "0"); // Notify Unity of exiting fullscreen
         }
 
         function toggleFullscreen() {
@@ -150,8 +127,9 @@
                 };
                 var encryptedData = getURLParameter('data');
                 unityInstance.SendMessage('Data', 'ReceiveEncryptedData', encryptedData);
-                if (window.isIOSDevice)
-                    unityInstance.SendMessage('Screen', 'FullScreen', "0"); // Notify Unity of exiting fullscreen
+                if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                    unityInstance.SendMessage('Screen', 'OnMobileDevice', "1");
+                }
             }).catch((message) => {
                 alert(message);
             });
