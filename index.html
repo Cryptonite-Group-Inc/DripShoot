@@ -7,12 +7,12 @@
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
 </head>
-<body>
+<body onload="resizeCanvas()">
     <div class ='logo-container'>
         <img src="TemplateData/DRIP_Logo.svg" alt="logo" class="logo">
     </div>
     <div id="unity-container" class="unity-desktop">
-        <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
+        <canvas id="unity-canvas" width="960" height="600" tabindex="-1"></canvas>
         <div id="unity-loading-bar">
             <div id="unity-logo"></div>
             <div id="unity-progress-bar-empty">
@@ -34,39 +34,43 @@
         var fullscreenButton = document.querySelector("#unity-fullscreen-button");
         var warningBanner = document.querySelector("#unity-warning");
 
+        var unityInstance; // Declare unityInstance globally
+
+        function resizeCanvas() {
+            if (container.classList.contains("unity-mobile")) {
+                canvas.style.width = window.innerWidth + 'px';
+                canvas.style.height = window.innerHeight + 'px';
+            } else {
+                canvas.style.width = "960px";
+                canvas.style.height = "600px";
+            }
+        }
+
         function getURLParameter(name) {
             return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
         }
 
         function requestFullscreen() {
-            var elem = document.getElementById('unity-container');
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.mozRequestFullScreen) { // Firefox
-                elem.mozRequestFullScreen();
-            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, Opera
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { // IE/Edge
-                elem.msRequestFullscreen();
+            unityInstance.SetFullscreen(1);
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(function (error) {
+                    console.log("Error locking the orientation: ", error);
+                });
             }
-            screen.orientation.lock('landscape').catch(function (error) {
-                console.log("Error locking the orientation: ", error);
-            });
         }
 
         function exitFullscreen() {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.mozCancelFullScreen) { // Firefox
-                document.mozCancelFullScreen();
-            } else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) { // IE/Edge
-                document.msExitFullscreen();
+            unityInstance.SetFullscreen(0);
+            if (screen.orientation && typeof screen.orientation.unlock === 'function') {
+                let unlockPromise = screen.orientation.unlock();
+                if (unlockPromise && typeof unlockPromise.catch === 'function') {
+                    unlockPromise.catch(function (error) {
+                        console.log("Error unlocking the orientation: ", error);
+                    });
+                }
+            } else {
+                console.log("Screen orientation unlocking is not supported or not necessary.");
             }
-            screen.orientation.unlock().catch(function (error) {
-                console.log("Error unlocking the orientation: ", error);
-            });
         }
 
         function toggleFullscreen() {
@@ -115,38 +119,39 @@
             meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
             document.getElementsByTagName('head')[0].appendChild(meta);
             container.className = "unity-mobile";
-
-            canvas.style.width = window.innerWidth + 'px';
-            canvas.style.height = window.innerHeight + 'px';
-
+            resizeCanvas();
         } else {
             canvas.style.width = "960px";
             canvas.style.height = "600px";
         }
 
         loadingBar.style.display = "block";
-        var unityInstance2; // Declare unityInstance at a higher scope if not already declared.
 
         var script = document.createElement("script");
         script.src = loaderUrl;
         script.onload = () => {
             createUnityInstance(canvas, config, (progress) => {
                 progressBarFull.style.width = 100 * progress + "%";
-            }).then((unityInstance) => {
-                unityInstance2 = unityInstance;
+            }).then((instance) => {
+                unityInstance = instance; // Assign the instance to the global variable
                 loadingBar.style.display = "none";
                 fullscreenButton.onclick = () => {
-                    unityInstance.SetFullscreen(1);
-                    toggleFullscreen();
+                    requestFullscreen();
                 };
                 var encryptedData = getURLParameter('data');
                 unityInstance.SendMessage('Data', 'ReceiveEncryptedData', encryptedData);
+                if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                    unityInstance.SendMessage('Screen', 'OnMobileDevice', "1");
+                }
             }).catch((message) => {
                 alert(message);
             });
         };
 
         document.body.appendChild(script);
+
+        // Add event listener for resize event
+        window.addEventListener('resize', resizeCanvas);
     </script>
 </body>
 </html>
