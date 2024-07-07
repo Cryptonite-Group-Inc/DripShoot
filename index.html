@@ -136,12 +136,15 @@
                     requestFullscreen();
                 };
                 var encryptedData = getURLParameter('data');
-                unityInstance.SendMessage('Data', 'ReceiveEncryptedData', encryptedData);
+                if (encryptedData) {
+                    unityInstance.SendMessage('Data', 'ReceiveEncryptedData', encryptedData);
+                }
                 if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
                     unityInstance.SendMessage('Screen', 'OnMobileDevice', "1");
                 }
             }).catch((message) => {
                 alert(message);
+                console.error(message); // Log the error for debugging
             });
         };
 
